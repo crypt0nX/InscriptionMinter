@@ -36,9 +36,11 @@ class InscriptionMinter:
 
     def batch_mint(self, times):
         count = 0
+        nonce = self.w3.eth.get_transaction_count(self.account.address)
         while count < times:
+            chainNonce = self.w3.eth.get_transaction_count(self.account.address)
             tx = {
-                'nonce': self.w3.eth.get_transaction_count(self.account.address),
+                'nonce': nonce if nonce >= chainNonce else chainNonce,
                 'to': self.account.address,
                 'gas': 0,
                 'gasPrice': self.w3.eth.gas_price,
@@ -53,6 +55,7 @@ class InscriptionMinter:
                 logging.info(f"Mint {str(count)} Complete at {datetime.now()} : tx hash: {self.w3.to_hex(tx_hash)}")
             except Exception as reason:
                 logging.error(f"Mint {str(count)} Failed at {datetime.now()} Reason: {reason}")
+            nonce += 1
             count += 1
 
 
@@ -61,7 +64,7 @@ if __name__ == "__main__":
                 "YOUR_PRIVATE_KEY --times YOUR_MINT_TIMES\n" \
                 "For example: python3 minter.py --mint-hex 0x68656c6c6f5f776f726c64 --rpc-url " \
                 "https://binance.llamarpc.com --private-key " \
-                "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --times=2"
+                "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --times 2"
     argv = sys.argv[1:]
     mint_hex = None
     rpc_url = None
