@@ -6,6 +6,8 @@ python3 -m pip install eth-account
 python3 -m pip install web3
 ```
 
+## Usage
+
 ```bash
 python3 minter.py --mint-hex YOUR_MINT_HEX(starts with 0x) --rpc-url YOUR_RPC_URL --private-key YOUR_PRIVATE_KEY --times YOUR_MINT_TIMES
 ```
